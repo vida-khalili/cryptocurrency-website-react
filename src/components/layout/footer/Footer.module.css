@@ -1,0 +1,15 @@
+.footer {
+  margin: 0 auto;
+  height: 50px;
+  padding: 8px;
+}
+
+.footer a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #abbd81;
+}
+
+.footer a:hover {
+  border-bottom: 2px solid #abbd81;
+}

@@ -1,10 +1,38 @@
+import { useEffect, useState } from "react";
 import "./App.css";
+import ThemeContext from "./contexts/ThemeContext";
 import Layout from "./components/layout/Layout";
+import SearchInput from "./components/search/SearchInput";
+import Loading from "./components/loading/Loading";
+import themeConfig from "./configs/theme";
 function App() {
+  const [cryptoList, setCryptoList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchApi = async () => {
+    const response = await fetch(
+      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+    );
+    const apiCryptoList = await response.json();
+    setCryptoList(apiCryptoList);
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchApi();
+  }, []);
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     fetchApi();
+  //   }, 5000);
+  // }, [cryptoList]);
   return (
-    <div className="App">
-      <Layout></Layout>
-    </div>
+    <ThemeContext.Provider value={{ theme: themeConfig }}>
+      <div className="App">
+        <Layout>
+          {loading ? <Loading /> : <SearchInput cryptoList={cryptoList} />}
+        </Layout>
+      </div>
+    </ThemeContext.Provider>
   );
 }
 
