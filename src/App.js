@@ -7,6 +7,8 @@ import Loading from "./components/loading/Loading";
 import themeConfig from "./configs/theme";
 function App() {
   const [cryptoList, setCryptoList] = useState([]);
+  const [refreshCount, setRefreshCount] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const fetchApi = async () => {
     const response = await fetch(
@@ -16,15 +18,16 @@ function App() {
     setCryptoList(apiCryptoList);
     setLoading(false);
   };
+
   useEffect(() => {
     fetchApi();
-  }, []);
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     fetchApi();
-  //   }, 5000);
-  // }, [cryptoList]);
+    let refreshInterval = setInterval(() => {
+      setRefreshCount((refreshCount) => refreshCount + 1);
+    }, 10000);
+    return () => {
+      clearInterval(refreshInterval);
+    };
+  }, [refreshCount]);
   return (
     <ThemeContext.Provider value={{ theme: themeConfig }}>
       <div className="App">
